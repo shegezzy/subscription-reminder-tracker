@@ -1,0 +1,63 @@
+import 'dotenv/config';
+
+const nodeEnvironments = ['development', 'test', 'production'] as const;
+
+export type NodeEnvironment = (typeof nodeEnvironments)[number];
+
+export interface EnvironmentConfig {
+  nodeEnv: NodeEnvironment;
+  port: number;
+  frontendUrl: string;
+}
+
+export class EnvironmentValidationError extends Error {
+  public constructor(public readonly issues: readonly string[]) {
+    super(`Invalid environment configuration: ${issues.join('; ')}`);
+    this.name = 'EnvironmentValidationError';
+  }
+}
+
+/**
+ * Parses only the variables required by the current backend scope. Future
+ * credentials are deliberately not validated until their corresponding days.
+ */
+export function validateEnvironment(
+  environment: NodeJS.ProcessEnv = process.env,
+): EnvironmentConfig {
+  const issues: string[] = [];
+  const nodeEnv = environment.NODE_ENV ?? 'development';
+
+  if (!nodeEnvironments.includes(nodeEnv as NodeEnvironment)) {
+    issues.push('NODE_ENV must be development, test, or production');
+  }
+
+  const portValue = environment.PORT ?? '4000';
+  const port = Number(portValue);
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    issues.push('PORT must be an integer between 1 and 65535');
+  }
+
+  const frontendUrl = environment.FRONTEND_URL;
+  if (!frontendUrl) {
+    issues.push('FRONTEND_URL is required');
+  } else {
+    try {
+      const parsedUrl = new URL(frontendUrl);
+      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+        issues.push('FRONTEND_URL must use http or https');
+      }
+    } catch {
+      issues.push('FRONTEND_URL must be a valid URL');
+    }
+  }
+
+  if (issues.length > 0) {
+    throw new EnvironmentValidationError(issues);
+  }
+
+  return {
+    nodeEnv: nodeEnv as NodeEnvironment,
+    port,
+    frontendUrl: frontendUrl as string,
+  };
+}
