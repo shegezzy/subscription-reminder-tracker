@@ -1,55 +1,34 @@
-# Day 2 End-of-Day Report — Backend Architecture
+# Day 3 End-of-Day Report — MongoDB
 
 ## Completed
 
-- Established the backend module boundaries for configuration, controllers,
-  middleware, models, repositories, routes, services, validators, utilities,
-  jobs, and types.
-- Added startup environment validation for `NODE_ENV`, `PORT`, and
-  `FRONTEND_URL`; later-day credentials are intentionally not required yet.
-- Moved the health endpoint into a controller and route while preserving its
-  documented `{"status":"ok"}` response.
-- Added safe request logging, asynchronous handler forwarding, a central error
-  handler, 404 handling, and standardized API error responses.
-- Added focused tests for configuration validation, async error forwarding,
-  malformed JSON, and unknown routes.
+- Added Mongoose and `MONGODB_URI` environment validation.
+- Added MongoDB connect/disconnect helpers; the server connects before listening.
+- Added foundational User and Subscription schemas with timestamps and required indexes.
+- Added mocked tests for successful and failed connection handling.
 
 ## Files changed
 
-- `backend/src/app.ts`, `backend/src/server.ts`
-- `backend/src/config/env.ts`
-- `backend/src/controllers/health.controller.ts`
-- `backend/src/middleware/*`
-- `backend/src/routes/health.routes.ts`
-- `backend/src/utils/*`
-- `backend/tests/architecture.test.ts`
-- `README.md`
+- `backend/package.json`, `package-lock.json`, `backend/.env.example`
+- `backend/src/config/database.ts`, `backend/src/config/env.ts`, `backend/src/server.ts`
+- `backend/src/models/user.model.ts`, `backend/src/models/subscription.model.ts`, `backend/src/models/index.ts`
+- `backend/tests/database.test.ts`
 
 ## Tests
 
-Executed from the repository root:
-
-- `npm run lint` — blocked: `eslint: command not found`.
-- `npm run typecheck` — blocked: `tsc: command not found`.
-- `npm run test` — blocked: `vitest: command not found`.
-- `npm run build` — blocked: `next: command not found`.
-
-No `node_modules` directory or lockfile is present. Dependency installation
-did not complete in the current environment, and the workspace declares Node
-20+ while the available runtime is Node.js 18.16.1.
+- `npm run lint --workspace backend` — passed.
+- `npm run typecheck --workspace backend` — passed.
+- `npm run test --workspace backend` — passed: 3 test files and 9 tests.
+- `npm run build --workspace backend` — passed.
 
 ## Problems
 
-- The workspace is not a Git repository, so Git status/history and a Day 2
-  commit could not be inspected or created.
-- Dependency installation must complete under Node.js 20+ before automated
-  verification can run.
+- None. The non-interactive shell defaults to Node 18, so verification explicitly used the installed Node 20.20.2 runtime.
 
 ## Next day
 
-Configure MongoDB Atlas and Mongoose connection handling, without adding
-authentication or reminder processing.
+Implement secure registration, login, logout, and authenticated-user access.
 
 ## Git
 
-Recommended commit message: `chore: establish backend architecture`
+Recommended commit message: `feat: configure mongodb and mongoose`

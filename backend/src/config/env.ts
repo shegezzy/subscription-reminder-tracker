@@ -8,6 +8,7 @@ export interface EnvironmentConfig {
   nodeEnv: NodeEnvironment;
   port: number;
   frontendUrl: string;
+  mongoUri: string;
 }
 
 export class EnvironmentValidationError extends Error {
@@ -51,6 +52,12 @@ export function validateEnvironment(
     }
   }
 
+  const mongoUri = environment.MONGODB_URI;
+  if (!mongoUri) issues.push('MONGODB_URI is required');
+  else if (!mongoUri.startsWith('mongodb://') && !mongoUri.startsWith('mongodb+srv://')) {
+    issues.push('MONGODB_URI must use mongodb or mongodb+srv');
+  }
+
   if (issues.length > 0) {
     throw new EnvironmentValidationError(issues);
   }
@@ -59,5 +66,6 @@ export function validateEnvironment(
     nodeEnv: nodeEnv as NodeEnvironment,
     port,
     frontendUrl: frontendUrl as string,
+    mongoUri: mongoUri as string,
   };
 }

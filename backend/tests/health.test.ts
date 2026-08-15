@@ -8,6 +8,7 @@ describe('GET /api/health', () => {
     const response = await request(app).get('/api/health');
 
     expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toMatch(/^application\/json(?:;|$)/);
     expect(response.body).toEqual({ status: 'ok' });
   });
 
@@ -19,5 +20,12 @@ describe('GET /api/health', () => {
     expect(bodyText).not.toContain('secret');
     expect(bodyText).not.toContain('password');
     expect(bodyText).not.toContain('mongodb');
+  });
+
+  it('does not disclose the Express implementation header', async () => {
+    const app = createApp();
+    const response = await request(app).get('/api/health');
+
+    expect(response.headers['x-powered-by']).toBeUndefined();
   });
 });

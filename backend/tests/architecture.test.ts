@@ -1,8 +1,11 @@
-import { describe, expect, it, vi } from 'vitest';
+import express from 'express';
+import { describe, expect, it } from 'vitest';
 import request from 'supertest';
 import { createApp } from '../src/app.js';
 import { EnvironmentValidationError, validateEnvironment } from '../src/config/env.js';
 import { asyncHandler } from '../src/middleware/async-handler.js';
+import { errorHandler } from '../src/middleware/error-handler.js';
+import { AppError } from '../src/utils/app-error.js';
 
 describe('backend architecture', () => {
   it('returns the standard error format for unknown routes', async () => {
@@ -31,26 +34,69 @@ describe('backend architecture', () => {
   });
 
   it('forwards rejected async handlers to Express error middleware', async () => {
-    const next = vi.fn();
-    const handler = asyncHandler(async () => {
-      throw new Error('failure');
-    });
+    const app = express();
+    app.get(
+      '/failure',
+      asyncHandler(async () => {
+        throw new AppError(418, 'TEAPOT', 'Expected failure.');
+      }),
+    );
+    app.use(errorHandler);
 
-    handler({} as never, {} as never, next);
-    await vi.waitFor(() => expect(next).toHaveBeenCalledOnce());
+    const response = await request(app).get('/failure');
+
+    expect(response.status).toBe(418);
+    expect(response.body).toEqual({
+      success: false,
+      error: { code: 'TEAPOT', message: 'Expected failure.' },
+    });
   });
 
   it('validates required runtime environment values', () => {
-    expect(() => validateEnvironment({ NODE_ENV: 'production', PORT: 'invalid' })).toThrow(
-      EnvironmentValidationError,
-    );
+    let caughtError: unknown;
+
+    try {
+      validateEnvironment({ NODE_ENV: 'production', PORT: 'invalid' });
+    } catch (error: unknown) {
+      caughtError = error;
+    }
+
+    if (!(caughtError instanceof EnvironmentValidationError)) {
+      throw new Error('Expected environment validation to throw EnvironmentValidationError.');
+    }
+
+    expect(caughtError.issues).toEqual([
+      'PORT must be an integer between 1 and 65535',
+      'FRONTEND_URL is required',
+      'MONGODB_URI is required',
+    ]);
 
     expect(
       validateEnvironment({
         NODE_ENV: 'test',
         PORT: '4100',
         FRONTEND_URL: 'http://localhost:3000',
+        MONGODB_URI: 'mongodb://localhost:27017/test',
       }),
-    ).toEqual({ nodeEnv: 'test', port: 4100, frontendUrl: 'http://localhost:3000' });
+    ).toEqual({
+      nodeEnv: 'test',
+      port: 4100,
+      frontendUrl: 'http://localhost:3000',
+      mongoUri: 'mongodb://localhost:27017/test',
+    });
+
+    expect(
+      validateEnvironment({
+        NODE_ENV: 'test',
+        PORT: '4100',
+        FRONTEND_URL: 'http://localhost:3000',
+        MONGODB_URI: 'mongodb+srv://user:pass@cluster0.example.mongodb.net/test',
+      }),
+    ).toEqual({
+      nodeEnv: 'test',
+      port: 4100,
+      frontendUrl: 'http://localhost:3000',
+      mongoUri: 'mongodb+srv://user:pass@cluster0.example.mongodb.net/test',
+    });
   });
 });
