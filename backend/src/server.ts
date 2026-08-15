@@ -5,7 +5,7 @@ import { validateEnvironment } from './config/env.js';
 async function startServer(): Promise<void> {
   const environment = validateEnvironment();
   await connectDatabase(environment.mongoUri);
-  const app = createApp();
+  const app = createApp(environment);
 
   app.listen(environment.port, () => {
     console.log(`Backend listening on port ${environment.port}`);

@@ -9,6 +9,8 @@ export interface EnvironmentConfig {
   port: number;
   frontendUrl: string;
   mongoUri: string;
+  jwtAccessSecret: string;
+  jwtRefreshSecret: string;
 }
 
 export class EnvironmentValidationError extends Error {
@@ -57,6 +59,10 @@ export function validateEnvironment(
   else if (!mongoUri.startsWith('mongodb://') && !mongoUri.startsWith('mongodb+srv://')) {
     issues.push('MONGODB_URI must use mongodb or mongodb+srv');
   }
+  const jwtAccessSecret = environment.JWT_ACCESS_SECRET;
+  const jwtRefreshSecret = environment.JWT_REFRESH_SECRET;
+  if (!jwtAccessSecret || jwtAccessSecret.length < 32) issues.push('JWT_ACCESS_SECRET must be at least 32 characters');
+  if (!jwtRefreshSecret || jwtRefreshSecret.length < 32) issues.push('JWT_REFRESH_SECRET must be at least 32 characters');
 
   if (issues.length > 0) {
     throw new EnvironmentValidationError(issues);
@@ -67,5 +73,7 @@ export function validateEnvironment(
     port,
     frontendUrl: frontendUrl as string,
     mongoUri: mongoUri as string,
+    jwtAccessSecret: jwtAccessSecret as string,
+    jwtRefreshSecret: jwtRefreshSecret as string,
   };
 }

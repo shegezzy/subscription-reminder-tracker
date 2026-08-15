@@ -69,6 +69,8 @@ describe('backend architecture', () => {
       'PORT must be an integer between 1 and 65535',
       'FRONTEND_URL is required',
       'MONGODB_URI is required',
+      'JWT_ACCESS_SECRET must be at least 32 characters',
+      'JWT_REFRESH_SECRET must be at least 32 characters',
     ]);
 
     expect(
@@ -77,12 +79,16 @@ describe('backend architecture', () => {
         PORT: '4100',
         FRONTEND_URL: 'http://localhost:3000',
         MONGODB_URI: 'mongodb://localhost:27017/test',
+        JWT_ACCESS_SECRET: 'a'.repeat(32),
+        JWT_REFRESH_SECRET: 'b'.repeat(32),
       }),
     ).toEqual({
       nodeEnv: 'test',
       port: 4100,
       frontendUrl: 'http://localhost:3000',
       mongoUri: 'mongodb://localhost:27017/test',
+      jwtAccessSecret: 'a'.repeat(32),
+      jwtRefreshSecret: 'b'.repeat(32),
     });
 
     expect(
@@ -91,12 +97,16 @@ describe('backend architecture', () => {
         PORT: '4100',
         FRONTEND_URL: 'http://localhost:3000',
         MONGODB_URI: 'mongodb+srv://user:pass@cluster0.example.mongodb.net/test',
+        JWT_ACCESS_SECRET: 'a'.repeat(32),
+        JWT_REFRESH_SECRET: 'b'.repeat(32),
       }),
     ).toEqual({
       nodeEnv: 'test',
       port: 4100,
       frontendUrl: 'http://localhost:3000',
       mongoUri: 'mongodb+srv://user:pass@cluster0.example.mongodb.net/test',
+      jwtAccessSecret: 'a'.repeat(32),
+      jwtRefreshSecret: 'b'.repeat(32),
     });
   });
 });
