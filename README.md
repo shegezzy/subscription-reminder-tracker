@@ -7,11 +7,11 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 8 of 30 — Render backend deployment configuration is complete. The
-Express API is defined as a Node.js web service with MongoDB, credentialed
-CORS, and an `/api/health` readiness check. Create the Render Blueprint with
-the production MongoDB URI and Netlify URL, then set its `onrender.com` URL as
-`NEXT_PUBLIC_API_URL` in Netlify. See the 30-day plan for scope.
+🚧 Day 9 of 30 — The authenticated subscription data layer is complete.
+The Express API supports scoped create, list, read, update, and delete
+operations at `/api/subscriptions`; requests validate their payloads and never
+accept a client-provided owner. Subscription UI is intentionally scheduled for
+Day 10. See the 30-day plan for scope.
 
 ## Stack
 

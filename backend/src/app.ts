@@ -5,6 +5,7 @@ import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 import { requestLogger } from './middleware/request-logger.js';
 import { healthRouter } from './routes/health.routes.js';
 import { createAuthRouter } from './routes/auth.routes.js';
+import { createSubscriptionRouter } from './routes/subscription.routes.js';
 import type { AuthConfig } from './types/auth.js';
 
 export function createApp(authConfig?: AuthConfig): Express {
@@ -19,6 +20,7 @@ export function createApp(authConfig?: AuthConfig): Express {
   app.use(express.json({ limit: '100kb' }));
   app.use('/api/health', healthRouter);
   if (authConfig) app.use('/api/auth', createAuthRouter(authConfig));
+  if (authConfig) app.use('/api/subscriptions', createSubscriptionRouter(authConfig));
   app.use(notFoundHandler);
   app.use(errorHandler);
 
