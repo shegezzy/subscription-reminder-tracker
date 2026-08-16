@@ -7,9 +7,8 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 13 of 30 — The backend has a dedicated, tested renewal calculation
-engine for weekly, monthly, quarterly, and yearly subscriptions. See the
-30-day plan for scope.
+🚧 Day 14 of 30 — The authenticated dashboard shows upcoming renewals, next
+charge, active subscriptions, spending projections, and trials ending soon.
 
 ## Stack
 
