@@ -50,4 +50,8 @@ export const authApi = {
 };
 
 export type CreateSubscriptionInput = { name: string; amount: number; currency: "NGN" | "USD" | "GBP" | "EUR"; billingCycle: "weekly" | "monthly" | "quarterly" | "yearly"; renewalDate: string; category?: string; paymentMethod?: string; websiteUrl?: string; reminderDays: number[]; isTrial: boolean; trialEndDate?: string };
-export const subscriptionApi = { create: (body: CreateSubscriptionInput) => apiRequest<{ subscription: unknown }>("/api/subscriptions", { method: "POST", body: JSON.stringify(body) }) };
+export type Subscription = { _id: string; name: string; amount: number | { $numberDecimal: string }; currency: string; billingCycle: "weekly" | "monthly" | "quarterly" | "yearly"; renewalDate: string; category?: string; status: "active" | "paused" | "cancelled"; isTrial: boolean; trialEndDate?: string };
+export const subscriptionApi = {
+  create: (body: CreateSubscriptionInput) => apiRequest<{ subscription: Subscription }>("/api/subscriptions", { method: "POST", body: JSON.stringify(body) }),
+  list: () => apiRequest<{ subscriptions: Subscription[] }>("/api/subscriptions"),
+};

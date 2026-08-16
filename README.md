@@ -7,10 +7,9 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 10 of 30 — Authenticated users can add a subscription at
-`/subscriptions/new` using a React Hook Form and Zod-validated form. It submits
-to the scoped backend API and supports renewal, reminder, website, and trial
-details. See the 30-day plan for scope.
+🚧 Day 11 of 30 — Authenticated users can browse subscriptions at
+`/subscriptions` with search, status/billing-cycle filters, sorting, loading,
+error, and empty states. See the 30-day plan for scope.
 
 ## Stack
 
@@ -18,7 +17,7 @@ details. See the 30-day plan for scope.
   deployed on Netlify
 - **Backend:** Node.js, Express, TypeScript (modular monolith) — deployed
   on Render
-- **Database:** MongoDB Atlas (Mongoose) — added Day 3
+- **Database:** MongoDB Atlas (Mongoose) — imple
 - **Notifications:** Resend (email, primary), Telegram (optional) — added
   Day 19/22
 - **Automation:** GitHub Actions scheduled workflows — added Day 21
