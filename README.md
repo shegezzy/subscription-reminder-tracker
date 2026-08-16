@@ -7,8 +7,9 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 12 of 30 — Authenticated users can view, edit, delete, pause, cancel,
-and reactivate subscriptions. See the 30-day plan for scope.
+🚧 Day 13 of 30 — The backend has a dedicated, tested renewal calculation
+engine for weekly, monthly, quarterly, and yearly subscriptions. See the
+30-day plan for scope.
 
 ## Stack
 
