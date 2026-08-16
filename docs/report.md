@@ -1,38 +1,38 @@
-# Day 4 End-of-Day Report — Authentication Backend
+# Day 6 End-of-Day Report — API Client and Authentication Hardening
 
 ## Completed
 
-- Added registration and login services with bcrypt password hashing and generic invalid-credential responses.
-- Added short-lived access tokens and refresh tokens, both delivered only in HTTP-only cookies; secure cookies are enabled in production.
-- Added authenticated access-token middleware and `GET /api/auth/me`.
-- Added logout behavior that clears both session cookies.
-- Added backend validation for registration/login fields and JWT environment-secret validation.
-- Removed a MongoDB credential that had been present in the environment example and replaced it with a safe placeholder.
+- Added a central frontend API client that always includes credentials, uses the configured API URL, surfaces API errors, and retries one unauthorized request after a successful refresh.
+- Added `POST /api/auth/refresh` to issue a new 15-minute access-token cookie from a valid refresh-token cookie.
+- Added credentialed CORS restricted to `FRONTEND_URL`.
+- Hardened cookie settings: local development uses `SameSite=Lax`; production uses `SameSite=None` and `Secure` for cross-site frontend/API deployments.
+- Ensured regenerated access tokens do not inherit the refresh token's expiry claims.
+- Added Day 6 coverage for expired access tokens, refresh handling, rejected refresh requests, and credentialed CORS.
+- Pinned the backend development runner to `tsx` 4.19.2 so local development remains compatible with macOS 11.
 
 ## Files changed
 
-- `backend/package.json`, `package-lock.json`, `backend/.env.example`
-- `backend/src/config/env.ts`, `backend/src/models/user.model.ts`
-- `backend/src/services/auth.service.ts`, `backend/src/routes/auth.routes.ts`
-- `backend/src/middleware/authenticate.ts`, `backend/src/utils/auth-tokens.ts`, `backend/src/types/auth.ts`
-- `backend/src/app.ts`, `backend/src/server.ts`
-- `backend/tests/auth-tokens.test.ts`, `backend/tests/architecture.test.ts`
+- `frontend/lib/api-client.ts`, `frontend/components/auth-provider.tsx`, `frontend/components/auth-form.tsx`
+- `backend/src/app.ts`, `backend/src/routes/auth.routes.ts`, `backend/src/types/auth.ts`, `backend/src/utils/auth-tokens.ts`
+- `backend/tests/auth-session.test.ts`
+- `backend/package.json`, `package-lock.json`
 
 ## Tests
 
+- `npm run lint --workspace frontend` — passed.
 - `npm run lint --workspace backend` — passed.
-- `npm run typecheck --workspace backend` — passed.
-- `npm run test --workspace backend` — passed: 4 test files and 11 tests.
+- `npm run typecheck` — passed for frontend and backend.
+- `npm run test --workspace backend` — passed: 5 test files and 14 tests. The suite was run outside the sandbox because Supertest needs a local ephemeral port.
 - `npm run build --workspace backend` — passed.
 
 ## Problems
 
-- A MongoDB credential was already committed in the Day 3 version of `backend/.env.example`. It was removed from the working tree, but it remains in Git history and must be revoked/rotated in MongoDB Atlas.
+- The frontend production build remains blocked in this execution environment by a Next.js/Turbopack CSS-worker port permission error. The error occurs before application code is evaluated and also occurs outside the sandbox.
 
 ## Next day
 
-Build the frontend login and registration flows.
+Configure Netlify deployment.
 
 ## Git
 
-Recommended commit message: `feat: implement secure authentication`
+Recommended commit message: `feat: harden authentication and api client`

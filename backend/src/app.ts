@@ -1,5 +1,6 @@
 import express, { type Express } from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { errorHandler, notFoundHandler } from './middleware/error-handler.js';
 import { requestLogger } from './middleware/request-logger.js';
 import { healthRouter } from './routes/health.routes.js';
@@ -11,6 +12,9 @@ export function createApp(authConfig?: AuthConfig): Express {
 
   app.disable('x-powered-by');
   app.use(requestLogger);
+  if (authConfig) {
+    app.use(cors({ origin: authConfig.frontendUrl, credentials: true, methods: ['GET', 'POST'] }));
+  }
   app.use(cookieParser());
   app.use(express.json({ limit: '100kb' }));
   app.use('/api/health', healthRouter);
