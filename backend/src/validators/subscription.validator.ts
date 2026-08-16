@@ -21,7 +21,7 @@ export interface CreateSubscriptionInput {
   reminderDays?: number[];
 }
 
-export type UpdateSubscriptionInput = Partial<CreateSubscriptionInput>;
+export type UpdateSubscriptionInput = Partial<CreateSubscriptionInput> & { status?: 'active' | 'paused' | 'cancelled' };
 
 const allowedFields = new Set([
   'name',

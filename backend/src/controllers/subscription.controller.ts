@@ -8,6 +8,7 @@ import {
   getSubscription,
   listSubscriptions,
   updateSubscription,
+  changeSubscriptionStatus,
 } from '../services/subscription.service.js';
 import {
   validateCreateSubscription,
@@ -53,4 +54,11 @@ export async function update(request: AuthenticatedRequest, response: Response):
 export async function remove(request: AuthenticatedRequest, response: Response): Promise<void> {
   await deleteSubscription(currentUserId(request), validateSubscriptionId(request.params.id));
   successResponse(response, { message: 'Subscription deleted.' });
+}
+
+export async function changeStatus(request: AuthenticatedRequest, response: Response): Promise<void> {
+  const status = request.params.status;
+  if (status !== 'active' && status !== 'paused' && status !== 'cancelled') throw new AppError(400, 'VALIDATION_ERROR', 'Subscription status is invalid.');
+  const subscription = await changeSubscriptionStatus(currentUserId(request), validateSubscriptionId(request.params.id), status);
+  successResponse(response, { subscription });
 }

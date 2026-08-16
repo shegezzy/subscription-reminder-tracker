@@ -1,4 +1,7 @@
-import { model, models, Schema, type InferSchemaType, type Model } from 'mongoose';
+import mongoose, { Schema, type InferSchemaType, type Model } from 'mongoose';
+
+const { model, models } = mongoose;
+
 export const billingCycles = ['weekly', 'monthly', 'quarterly', 'yearly'] as const;
 export const subscriptionStatuses = ['active', 'paused', 'cancelled'] as const;
 const subscriptionSchema = new Schema(

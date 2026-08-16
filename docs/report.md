@@ -1,15 +1,15 @@
-# Day 11 End-of-Day Report — Subscription List
+# Day 12 End-of-Day Report — Subscription Management
 
 ## Completed
 
-- Added protected `/subscriptions` list page with responsive subscription cards.
-- Added API loading/error states, search, status and billing-cycle filters, and renewal/name/amount sorting.
-- Added first-subscription and no-results empty states without future management controls.
+- Added subscription detail and edit routes, delete confirmation, and lifecycle controls.
+- Added an explicit authenticated lifecycle endpoint for pause, cancel, and reactivate actions.
 
 ## Files changed
 
-- `frontend/app/subscriptions/page.tsx`
-- `frontend/components/subscription-list.tsx`
+- `frontend/app/subscriptions/[id]/page.tsx`
+- `frontend/app/subscriptions/[id]/edit/page.tsx`
+- `backend/src/controllers/subscription.controller.ts`, `backend/src/routes/subscription.routes.ts`, `backend/src/services/subscription.service.ts`
 - `frontend/lib/api-client.ts`
 - `README.md`
 - `docs/report.md`
@@ -17,16 +17,16 @@
 ## Verification
 
 - `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npx tsc -p frontend/tsconfig.json --noEmit` — passed.
-- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run lint --workspace frontend` — passed with one pre-existing React Hook Form compiler compatibility warning.
+- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run typecheck --workspace backend` — passed.
 
 ## Problems
 
-- The frontend production build is blocked in this environment by Turbopack's CSS worker failing to bind a local port (`Operation not permitted`), including when run outside the sandbox. Type checking passes; the failure occurs before application code is evaluated.
+- Frontend production build remains blocked in this environment by Turbopack's CSS worker local-port restriction.
 
 ## Next day
 
-Build subscription details and lifecycle management only.
+Build the renewal calculation engine only.
 
 ## Git
 
-Recommended commit message: `feat: add subscription list and filtering`
+Recommended commit message: `feat: implement subscription lifecycle management`

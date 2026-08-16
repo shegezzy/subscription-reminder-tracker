@@ -35,3 +35,7 @@ export async function deleteSubscription(userId: string, subscriptionId: string)
   const subscription = await repository.deleteByIdForUser(userId, subscriptionId);
   if (!subscription) notFound();
 }
+
+export function changeSubscriptionStatus(userId: string, subscriptionId: string, status: 'active' | 'paused' | 'cancelled') {
+  return updateSubscription(userId, subscriptionId, { status });
+}

@@ -54,4 +54,8 @@ export type Subscription = { _id: string; name: string; amount: number | { $numb
 export const subscriptionApi = {
   create: (body: CreateSubscriptionInput) => apiRequest<{ subscription: Subscription }>("/api/subscriptions", { method: "POST", body: JSON.stringify(body) }),
   list: () => apiRequest<{ subscriptions: Subscription[] }>("/api/subscriptions"),
+  get: (id: string) => apiRequest<{ subscription: Subscription }>(`/api/subscriptions/${id}`),
+  update: (id: string, body: Partial<CreateSubscriptionInput>) => apiRequest<{ subscription: Subscription }>(`/api/subscriptions/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+  remove: (id: string) => apiRequest<{ message: string }>(`/api/subscriptions/${id}`, { method: "DELETE" }),
+  setStatus: (id: string, status: "active" | "paused" | "cancelled") => apiRequest<{ subscription: Subscription }>(`/api/subscriptions/${id}/status/${status}`, { method: "PATCH" }),
 };

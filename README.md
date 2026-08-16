@@ -7,9 +7,8 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 11 of 30 — Authenticated users can browse subscriptions at
-`/subscriptions` with search, status/billing-cycle filters, sorting, loading,
-error, and empty states. See the 30-day plan for scope.
+🚧 Day 12 of 30 — Authenticated users can view, edit, delete, pause, cancel,
+and reactivate subscriptions. See the 30-day plan for scope.
 
 ## Stack
 
