@@ -1,33 +1,33 @@
-# Day 7 End-of-Day Report — Netlify Deployment
+# Day 8 End-of-Day Report — Render Deployment
 
 ## Completed
 
-- Configured Netlify to build the frontend from the npm-workspaces repository with `npm run build --workspace frontend`.
-- Configured the Next.js build output as `frontend/.next` and pinned the Netlify build runtime to Node.js 20.9.0, which satisfies Next.js 16.
-- Confirmed that no SPA fallback or manually pinned Netlify Next.js plugin is required: Netlify's managed Next.js support handles the App Router.
-- Documented the Netlify setup and the required `NEXT_PUBLIC_API_URL` environment variable in the root README.
-- Kept the production backend URL unset because it is deliberately a Day 8 Render deployment concern.
+- Added `render.yaml` for a free Render Node.js web service that builds the backend from the repository root and starts the compiled Express server.
+- Configured Node.js 20.20.2, automatic deploys from commits, and `GET /api/health` as the HTTP readiness check.
+- Declared `MONGODB_URI` and `FRONTEND_URL` as secure Blueprint inputs, and configured Render-generated access and refresh JWT secrets.
+- Made the Express server bind explicitly to `0.0.0.0` on Render's supplied `PORT`.
+- Documented Render creation, MongoDB/CORS configuration, and the Netlify API URL handoff in the root README.
 
 ## Files changed
 
-- `netlify.toml`
+- `render.yaml`
+- `backend/src/server.ts`
 - `README.md`
 - `docs/report.md`
 
 ## Verification
 
-- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run typecheck` — passed for both workspaces.
+- `render.yaml` — parses as valid YAML.
+- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run typecheck --workspace backend` — passed.
 - `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run test --workspace backend` — passed: 5 test files and 14 tests.
-- `npm run build --workspace backend` — passed under the local Node.js 18 runtime.
-- The local default Node.js runtime is v18.16.1. It cannot build Next.js 16, which requires Node.js 20.9.0 or newer; Netlify is configured with the required Node version.
-- The Node.js 20 frontend production build reaches Next.js compilation but is blocked by Turbopack's CSS worker trying to bind a local port (`Operation not permitted`); the same failure occurs outside the sandbox.
-- Under Node.js 20.20.2, lint currently reports 11 pre-existing backend violations. These are outside the Day 7 deployment scope and were not changed.
-- A production deployment cannot be verified from this workspace because no Netlify site/account connection or Day 8 production backend URL is available.
+- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run build --workspace backend` — passed.
+- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run lint --workspace backend` — passed.
+- A live deployment cannot be completed from this workspace because it requires the Render account/Git connection, production MongoDB Atlas URI, and Netlify site URL.
 
 ## Next day
 
-Deploy the Express backend to Render, configure its production environment and CORS origin, then set the resulting URL as `NEXT_PUBLIC_API_URL` in Netlify and verify the complete production flow.
+Implement the subscription data layer only.
 
 ## Git
 
-Recommended commit message: `chore: configure netlify deployment`
+Recommended commit message: `chore: configure render backend deployment`

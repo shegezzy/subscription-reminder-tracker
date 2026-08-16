@@ -7,7 +7,7 @@ async function startServer(): Promise<void> {
   await connectDatabase(environment.mongoUri);
   const app = createApp(environment);
 
-  app.listen(environment.port, () => {
+  app.listen(environment.port, '0.0.0.0', () => {
     console.log(`Backend listening on port ${environment.port}`);
   });
 }

@@ -7,11 +7,11 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 7 of 30 — Netlify deployment configuration is complete. Netlify builds
-the Next.js frontend from this monorepo using Node.js 20.9.0 and its built-in
-Next.js/App Router support. Set `NEXT_PUBLIC_API_URL` in Netlify to the
-production backend URL once Day 8 is complete, then deploy from the connected
-Git repository. See the 30-day plan for scope.
+🚧 Day 8 of 30 — Render backend deployment configuration is complete. The
+Express API is defined as a Node.js web service with MongoDB, credentialed
+CORS, and an `/api/health` readiness check. Create the Render Blueprint with
+the production MongoDB URI and Netlify URL, then set its `onrender.com` URL as
+`NEXT_PUBLIC_API_URL` in Netlify. See the 30-day plan for scope.
 
 ## Stack
 
@@ -67,9 +67,29 @@ Production (and any deploy contexts that need the API):
 NEXT_PUBLIC_API_URL=https://<your-render-backend-url>
 ```
 
-The Render backend URL is intentionally not set until Day 8. `NEXT_PUBLIC_*`
-values are embedded in the browser build, so do not put secrets in Netlify's
-frontend environment variables.
+The Render backend URL is supplied after the Day 8 Blueprint has its first
+successful deploy. `NEXT_PUBLIC_*` values are embedded in the browser build,
+so do not put secrets in Netlify's frontend environment variables.
+
+## Render deployment
+
+Create a Blueprint from the committed [`render.yaml`](render.yaml). It uses the
+repository-root npm workspace lockfile, builds the backend with
+`npm ci && npm run build --workspace backend`, starts it with
+`npm run start --workspace backend`, and checks `GET /api/health` before
+serving traffic.
+
+During the initial Blueprint setup, provide:
+
+```text
+MONGODB_URI=mongodb+srv://<production-atlas-connection-string>
+FRONTEND_URL=https://<your-netlify-site>.netlify.app
+```
+
+Render generates both JWT secrets and supplies the runtime `PORT`; do not add
+them to source control. After the first successful deploy, copy the API's
+HTTPS `onrender.com` URL into Netlify as `NEXT_PUBLIC_API_URL`, redeploy the
+frontend, and use the public health endpoint to verify the connection.
 
 ## Scripts (root)
 
