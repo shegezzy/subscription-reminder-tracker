@@ -7,11 +7,10 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 9 of 30 — The authenticated subscription data layer is complete.
-The Express API supports scoped create, list, read, update, and delete
-operations at `/api/subscriptions`; requests validate their payloads and never
-accept a client-provided owner. Subscription UI is intentionally scheduled for
-Day 10. See the 30-day plan for scope.
+🚧 Day 10 of 30 — Authenticated users can add a subscription at
+`/subscriptions/new` using a React Hook Form and Zod-validated form. It submits
+to the scoped backend API and supports renewal, reminder, website, and trial
+details. See the 30-day plan for scope.
 
 ## Stack
 

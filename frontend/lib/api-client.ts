@@ -48,3 +48,6 @@ export const authApi = {
   register: (body: { email: string; password: string; firstName: string; lastName: string }) => apiRequest<AuthResponse>("/api/auth/register", { method: "POST", body: JSON.stringify(body) }, false),
   logout: () => apiRequest<{ message: string }>("/api/auth/logout", { method: "POST" }, false),
 };
+
+export type CreateSubscriptionInput = { name: string; amount: number; currency: "NGN" | "USD" | "GBP" | "EUR"; billingCycle: "weekly" | "monthly" | "quarterly" | "yearly"; renewalDate: string; category?: string; paymentMethod?: string; websiteUrl?: string; reminderDays: number[]; isTrial: boolean; trialEndDate?: string };
+export const subscriptionApi = { create: (body: CreateSubscriptionInput) => apiRequest<{ subscription: unknown }>("/api/subscriptions", { method: "POST", body: JSON.stringify(body) }) };
