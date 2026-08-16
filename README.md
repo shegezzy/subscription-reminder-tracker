@@ -7,8 +7,8 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 14 of 30 — The authenticated dashboard shows upcoming renewals, next
-charge, active subscriptions, spending projections, and trials ending soon.
+🚧 Day 15 of 30 — Spending analytics show active subscription counts and
+monthly and annual projections by category and currency, without conversion.
 
 ## Stack
 

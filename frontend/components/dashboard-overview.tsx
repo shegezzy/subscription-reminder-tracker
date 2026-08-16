@@ -128,5 +128,6 @@ export function DashboardOverview() {
     </div>
 
     <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex items-center justify-between gap-4"><div><h2 className="font-semibold">Upcoming renewals</h2><p className="mt-1 text-sm text-slate-600">Active subscriptions renewing in the next {UPCOMING_DAYS} days.</p></div><Link className="text-sm font-medium text-blue-700" href="/subscriptions">View all</Link></div>{dashboard.upcoming.length > 0 ? <ul className="mt-5 divide-y divide-slate-100">{dashboard.upcoming.map((subscription) => <li key={subscription._id} className="flex items-center justify-between gap-4 py-3"><div><p className="font-semibold">{subscription.name}</p><p className="text-sm text-slate-600">{displayDate(subscription.renewalDate)} · {relativeDate(subscription.renewalDate, dashboard.today)}</p></div><p className="font-semibold">{currencyAmount(amount(subscription.amount), subscription.currency)}</p></li>)}</ul> : <p className="mt-5 text-sm text-slate-600">No upcoming renewals in this period.</p>}</article>
+    <div className="text-right"><Link className="text-sm font-medium text-blue-700" href="/analytics">View spending analytics →</Link></div>
   </section>;
 }
