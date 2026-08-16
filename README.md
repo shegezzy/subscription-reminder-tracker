@@ -7,9 +7,10 @@ you before they renew. Manual tracking only — no bank or card integration.
 
 ## Status
 
-🚧 Day 2 of 30 — Backend architecture. The backend now has a modular HTTP
-foundation with runtime configuration validation, centralized errors, request
-logging, and consistent API error responses. See the 30-day plan for scope.
+🚧 Day 7 of 30 — Netlify deployment configuration. The frontend is configured
+to build from this monorepo on Netlify with Node.js 20 and Next.js App Router
+support. Before deploying, set `NEXT_PUBLIC_API_URL` in Netlify to the
+production backend URL created on Day 8. See the 30-day plan for scope.
 
 ## Stack
 
@@ -56,5 +57,4 @@ Health check: `GET http://localhost:4000/api/health` → `{"status":"ok"}`
 - `npm run typecheck` — type-check both workspaces
 - `npm run build` — build both workspaces
 - `npm run test` — run backend tests
-
 
