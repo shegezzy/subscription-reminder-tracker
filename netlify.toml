@@ -3,4 +3,5 @@
   publish = "frontend/.next"
 
   [build.environment]
-    NODE_VERSION = "20"
+    # Next.js 16 requires Node.js 20.9.0 or later.
+    NODE_VERSION = "20.9.0"

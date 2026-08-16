@@ -1,38 +1,33 @@
-# Day 6 End-of-Day Report — API Client and Authentication Hardening
+# Day 7 End-of-Day Report — Netlify Deployment
 
 ## Completed
 
-- Added a central frontend API client that always includes credentials, uses the configured API URL, surfaces API errors, and retries one unauthorized request after a successful refresh.
-- Added `POST /api/auth/refresh` to issue a new 15-minute access-token cookie from a valid refresh-token cookie.
-- Added credentialed CORS restricted to `FRONTEND_URL`.
-- Hardened cookie settings: local development uses `SameSite=Lax`; production uses `SameSite=None` and `Secure` for cross-site frontend/API deployments.
-- Ensured regenerated access tokens do not inherit the refresh token's expiry claims.
-- Added Day 6 coverage for expired access tokens, refresh handling, rejected refresh requests, and credentialed CORS.
-- Pinned the backend development runner to `tsx` 4.19.2 so local development remains compatible with macOS 11.
+- Configured Netlify to build the frontend from the npm-workspaces repository with `npm run build --workspace frontend`.
+- Configured the Next.js build output as `frontend/.next` and pinned the Netlify build runtime to Node.js 20.9.0, which satisfies Next.js 16.
+- Confirmed that no SPA fallback or manually pinned Netlify Next.js plugin is required: Netlify's managed Next.js support handles the App Router.
+- Documented the Netlify setup and the required `NEXT_PUBLIC_API_URL` environment variable in the root README.
+- Kept the production backend URL unset because it is deliberately a Day 8 Render deployment concern.
 
 ## Files changed
 
-- `frontend/lib/api-client.ts`, `frontend/components/auth-provider.tsx`, `frontend/components/auth-form.tsx`
-- `backend/src/app.ts`, `backend/src/routes/auth.routes.ts`, `backend/src/types/auth.ts`, `backend/src/utils/auth-tokens.ts`
-- `backend/tests/auth-session.test.ts`
-- `backend/package.json`, `package-lock.json`
+- `netlify.toml`
+- `README.md`
+- `docs/report.md`
 
-## Tests
+## Verification
 
-- `npm run lint --workspace frontend` — passed.
-- `npm run lint --workspace backend` — passed.
-- `npm run typecheck` — passed for frontend and backend.
-- `npm run test --workspace backend` — passed: 5 test files and 14 tests. The suite was run outside the sandbox because Supertest needs a local ephemeral port.
-- `npm run build --workspace backend` — passed.
-
-## Problems
-
-- The frontend production build remains blocked in this execution environment by a Next.js/Turbopack CSS-worker port permission error. The error occurs before application code is evaluated and also occurs outside the sandbox.
+- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run typecheck` — passed for both workspaces.
+- `PATH=/Users/mac/.nvm/versions/node/v20.20.2/bin:$PATH npm run test --workspace backend` — passed: 5 test files and 14 tests.
+- `npm run build --workspace backend` — passed under the local Node.js 18 runtime.
+- The local default Node.js runtime is v18.16.1. It cannot build Next.js 16, which requires Node.js 20.9.0 or newer; Netlify is configured with the required Node version.
+- The Node.js 20 frontend production build reaches Next.js compilation but is blocked by Turbopack's CSS worker trying to bind a local port (`Operation not permitted`); the same failure occurs outside the sandbox.
+- Under Node.js 20.20.2, lint currently reports 11 pre-existing backend violations. These are outside the Day 7 deployment scope and were not changed.
+- A production deployment cannot be verified from this workspace because no Netlify site/account connection or Day 8 production backend URL is available.
 
 ## Next day
 
-Configure Netlify deployment.
+Deploy the Express backend to Render, configure its production environment and CORS origin, then set the resulting URL as `NEXT_PUBLIC_API_URL` in Netlify and verify the complete production flow.
 
 ## Git
 
-Recommended commit message: `feat: harden authentication and api client`
+Recommended commit message: `chore: configure netlify deployment`
